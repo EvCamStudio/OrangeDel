@@ -1,0 +1,297 @@
+/* ─── Scroll Progress Bar ──────────────────────────────────── */
+.progressBarTrack {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  z-index: calc(var(--z-navbar) + 1);
+  background: transparent;
+  pointer-events: none;
+}
+
+.progressBarFill {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    var(--color-primary) 0%,
+    var(--color-gold) 100%
+  );
+  transform: scaleX(0);
+  transform-origin: left center;
+  box-shadow: 0 0 8px var(--color-primary-glow);
+  will-change: transform;
+}
+
+/* ─── Navbar Container ─────────────────────────────────────── */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: var(--z-navbar);
+  padding: var(--space-5) 0;
+  transition:
+    background-color var(--duration-base) var(--ease-out),
+    padding var(--duration-base) var(--ease-out),
+    border-color var(--duration-base) var(--ease-out),
+    backdrop-filter var(--duration-base) var(--ease-out);
+  border-bottom: 1px solid transparent;
+}
+
+/* Scrolled state — dark + blur */
+.nav.scrolled {
+  background-color: rgba(8, 8, 4, 0.82);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  padding: var(--space-4) 0;
+  border-bottom-color: var(--color-border);
+}
+
+/* Inner layout */
+.inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--section-px);
+  gap: var(--space-8);
+}
+
+/* ─── Logo ─────────────────────────────────────────────────── */
+.logo {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: var(--weight-light);
+  letter-spacing: var(--tracking-tight);
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: opacity var(--duration-fast) var(--ease-out);
+}
+
+.logo:hover {
+  opacity: 0.8;
+}
+
+.logo em {
+  font-style: italic;
+  background: linear-gradient(
+    120deg,
+    var(--color-primary) 0%,
+    var(--color-gold) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ─── Desktop Links ─────────────────────────────────────────── */
+.links {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  list-style: none;
+}
+
+.linkItem {
+  position: relative;
+}
+
+.link {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+  transition: color var(--duration-fast) var(--ease-out);
+  padding: var(--space-1) 0;
+}
+
+.link:hover {
+  color: var(--color-text-primary);
+}
+
+.link.active {
+  color: var(--color-text-primary);
+}
+
+.linkText {
+  display: block;
+}
+
+/* Slide underline — slide dari kiri saat hover */
+.linkUnderline {
+  display: block;
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--color-primary);
+  transform: scaleX(0);
+  transform-origin: right center;
+  transition: transform var(--duration-base) var(--ease-out);
+}
+
+.link:hover .linkUnderline {
+  transform: scaleX(1);
+  transform-origin: left center;
+}
+
+.link.active .linkUnderline {
+  transform: scaleX(1);
+  transform-origin: left center;
+}
+
+
+/* ─── Actions (CTA + Hamburger) ─────────────────────────────── */
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  flex-shrink: 0;
+}
+
+/* CTA Button */
+.cta {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-2) var(--space-5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+  transition:
+    color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out),
+    background-color var(--duration-fast) var(--ease-out);
+}
+
+.cta:hover {
+  color: var(--color-text-inverse);
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+/* ─── Hamburger ─────────────────────────────────────────────── */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  padding: var(--space-2);
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+.bar {
+  display: block;
+  width: 22px;
+  height: 1.5px;
+  background-color: var(--color-text-primary);
+  border-radius: 1px;
+  transform-origin: center;
+  transition:
+    transform var(--duration-base) var(--ease-out),
+    opacity var(--duration-fast) var(--ease-out),
+    width var(--duration-base) var(--ease-out);
+}
+
+/* Hamburger → X */
+.hamburgerOpen .bar:nth-child(1) {
+  transform: translateY(6.5px) rotate(45deg);
+}
+.hamburgerOpen .bar:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+.hamburgerOpen .bar:nth-child(3) {
+  transform: translateY(-6.5px) rotate(-45deg);
+}
+
+/* ─── Mobile Menu Overlay ───────────────────────────────────── */
+.mobileMenu {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--z-navbar) - 1);
+  background-color: rgba(8, 8, 4, 0.97);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-12);
+  padding: var(--space-24) var(--section-px);
+}
+
+.mobileLinks {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-6);
+  list-style: none;
+}
+
+.mobileNavItem {
+  overflow: hidden;
+}
+
+.mobileLink {
+  display: block;
+  font-family: var(--font-display);
+  font-size: var(--text-4xl);
+  font-weight: var(--weight-light);
+  letter-spacing: var(--tracking-tight);
+  color: var(--color-text-secondary);
+  transition: color var(--duration-fast) var(--ease-out);
+  text-align: center;
+}
+
+.mobileLink:hover {
+  color: var(--color-primary);
+}
+
+.mobileTagline {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+/* ─── Responsive ────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .links {
+    display: none;
+  }
+
+  .cta {
+    display: none;
+  }
+
+  .hamburger {
+    display: flex;
+  }
+}
+
+@media (max-width: 480px) {
+  .mobileLink {
+    font-size: var(--text-3xl);
+  }
+}

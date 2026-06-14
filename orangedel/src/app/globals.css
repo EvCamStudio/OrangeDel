@@ -1,0 +1,367 @@
+/* ============================================================
+   ORANGEDEL — DESIGN SYSTEM
+   "Dark Luxury Citrus"
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   1. CSS CUSTOM PROPERTIES (TOKENS)
+   ------------------------------------------------------------ */
+:root {
+  /* --- Colors --- */
+
+  /* Background */
+  --color-bg:         #080804;   /* Hitam hangat utama */
+  --color-bg-soft:    #0E0D09;   /* Sedikit lebih terang */
+  --color-surface:    #141310;   /* Card / panel surface */
+  --color-surface-2:  #1C1A15;   /* Elevated surface */
+  --color-border:     #2A2720;   /* Subtle border */
+  --color-border-soft:#1A1815;   /* Sangat subtle */
+
+  /* Primary — Citrus Orange */
+  --color-primary:        #FF6B00;  /* Oranye utama — vibrant */
+  --color-primary-hover:  #FF8230;  /* Hover state */
+  --color-primary-light:  #FFA040;  /* Amber — lighter */
+  --color-primary-pale:   #FFD4A0;  /* Sangat light, untuk teks di atas gelap */
+  --color-primary-glow:   rgba(255, 107, 0, 0.20);  /* Glow effect */
+  --color-primary-glow-strong: rgba(255, 107, 0, 0.40);
+
+  /* Accent — Emas */
+  --color-gold:       #D4A017;
+  --color-gold-light: #F0C040;
+
+  /* Nature — Hijau Daun */
+  --color-green:      #3D6B35;
+  --color-green-light:#5A9E4E;
+
+  /* Text */
+  --color-text-primary:   #F5F0E8;  /* Putih hangat */
+  --color-text-secondary: #9A9488;  /* Abu hangat — subtext */
+  --color-text-muted:     #5A5650;  /* Sangat redup */
+  --color-text-inverse:   #080804;  /* Teks di atas bg terang */
+
+  /* Utility */
+  --color-white:    #FFFFFF;
+  --color-black:    #000000;
+  --color-overlay:  rgba(8, 8, 4, 0.75);   /* Overlay gelap */
+  --color-overlay-strong: rgba(8, 8, 4, 0.92);
+
+  /* --- Typography --- */
+  --font-display: var(--font-cormorant), "Georgia", serif;
+  --font-body:    var(--font-dm-sans), "Helvetica Neue", Arial, sans-serif;
+
+  /* Font Sizes — Fluid / Clamp */
+  --text-xs:   clamp(0.7rem,  1vw,   0.75rem);
+  --text-sm:   clamp(0.8rem,  1.2vw, 0.875rem);
+  --text-base: clamp(0.9rem,  1.5vw, 1rem);
+  --text-md:   clamp(1rem,    1.8vw, 1.125rem);
+  --text-lg:   clamp(1.1rem,  2vw,   1.25rem);
+  --text-xl:   clamp(1.25rem, 2.5vw, 1.5rem);
+  --text-2xl:  clamp(1.5rem,  3vw,   2rem);
+  --text-3xl:  clamp(2rem,    4vw,   3rem);
+  --text-4xl:  clamp(2.5rem,  5vw,   4rem);
+  --text-5xl:  clamp(3rem,    7vw,   6rem);
+  --text-6xl:  clamp(4rem,    10vw,  9rem);
+  --text-hero: clamp(5rem,    13vw,  13rem);
+
+  /* Font Weights */
+  --weight-light:   300;
+  --weight-regular: 400;
+  --weight-medium:  500;
+  --weight-semibold:600;
+  --weight-bold:    700;
+
+  /* Line Heights */
+  --leading-none:   1;
+  --leading-tight:  1.1;
+  --leading-snug:   1.25;
+  --leading-normal: 1.5;
+  --leading-relaxed:1.65;
+  --leading-loose:  2;
+
+  /* Letter Spacing */
+  --tracking-tight:  -0.03em;
+  --tracking-normal:  0em;
+  --tracking-wide:    0.05em;
+  --tracking-wider:   0.1em;
+  --tracking-widest:  0.2em;
+
+  /* --- Spacing --- */
+  --space-1:    0.25rem;   /*  4px */
+  --space-2:    0.5rem;    /*  8px */
+  --space-3:    0.75rem;   /* 12px */
+  --space-4:    1rem;      /* 16px */
+  --space-5:    1.25rem;   /* 20px */
+  --space-6:    1.5rem;    /* 24px */
+  --space-8:    2rem;      /* 32px */
+  --space-10:   2.5rem;    /* 40px */
+  --space-12:   3rem;      /* 48px */
+  --space-16:   4rem;      /* 64px */
+  --space-20:   5rem;      /* 80px */
+  --space-24:   6rem;      /* 96px */
+  --space-32:   8rem;      /* 128px */
+  --space-40:   10rem;     /* 160px */
+
+  /* Section Padding */
+  --section-py: clamp(5rem, 10vw, 10rem);
+  --section-px: clamp(1.5rem, 6vw, 8rem);
+
+  /* --- Layout --- */
+  --container-max: 1440px;
+  --container-md:  1024px;
+  --container-sm:  768px;
+
+  /* --- Border Radius --- */
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   16px;
+  --radius-xl:   24px;
+  --radius-2xl:  40px;
+  --radius-full: 9999px;
+
+  /* --- Shadows & Glows --- */
+  --shadow-sm:     0 2px 8px rgba(0, 0, 0, 0.4);
+  --shadow-md:     0 4px 24px rgba(0, 0, 0, 0.5);
+  --shadow-lg:     0 8px 48px rgba(0, 0, 0, 0.6);
+  --glow-primary:  0 0 40px var(--color-primary-glow);
+  --glow-primary-strong: 0 0 80px var(--color-primary-glow-strong);
+  --glow-gold:     0 0 40px rgba(212, 160, 23, 0.25);
+
+  /* --- Transitions --- */
+  --ease-out:       cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out:    cubic-bezier(0.45, 0, 0.55, 1);
+  --ease-spring:    cubic-bezier(0.34, 1.56, 0.64, 1);
+  --duration-fast:  200ms;
+  --duration-base:  350ms;
+  --duration-slow:  600ms;
+  --duration-slower:900ms;
+
+  /* --- Z-Index --- */
+  --z-base:    0;
+  --z-above:   10;
+  --z-sticky:  50;
+  --z-navbar:  100;
+  --z-overlay: 200;
+  --z-modal:   300;
+  --z-loading: 9999;
+}
+
+/* ------------------------------------------------------------
+   2. RESET & BASE
+   ------------------------------------------------------------ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: auto; /* Dihandle oleh Lenis */
+  -webkit-text-size-adjust: 100%;
+  height: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-normal);
+  color: var(--color-text-primary);
+  background-color: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  min-height: 100%;
+}
+
+/* Lenis smooth scroll */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* ------------------------------------------------------------
+   3. TYPOGRAPHY BASE
+   ------------------------------------------------------------ */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: var(--weight-light);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  color: var(--color-text-primary);
+}
+
+h1 { font-size: var(--text-5xl); }
+h2 { font-size: var(--text-4xl); }
+h3 { font-size: var(--text-3xl); }
+h4 { font-size: var(--text-2xl); }
+h5 { font-size: var(--text-xl); }
+h6 { font-size: var(--text-lg); }
+
+p {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  color: var(--color-text-secondary);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+img, video {
+  display: block;
+  max-width: 100%;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: var(--font-body);
+}
+
+ul, ol {
+  list-style: none;
+}
+
+/* ------------------------------------------------------------
+   4. UTILITY CLASSES
+   ------------------------------------------------------------ */
+
+/* Container */
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--section-px);
+}
+
+/* Section wrapper */
+.section {
+  padding-block: var(--section-py);
+}
+
+/* Display font */
+.font-display { font-family: var(--font-display); }
+.font-body    { font-family: var(--font-body); }
+
+/* Text colors */
+.text-primary   { color: var(--color-primary); }
+.text-gold      { color: var(--color-gold); }
+.text-muted     { color: var(--color-text-muted); }
+.text-secondary { color: var(--color-text-secondary); }
+
+/* Text sizes */
+.text-hero { font-size: var(--text-hero); }
+.text-6xl  { font-size: var(--text-6xl); }
+.text-5xl  { font-size: var(--text-5xl); }
+
+/* Italic (Cormorant italic sangat elegan) */
+.italic { font-style: italic; }
+
+/* Tracking */
+.tracking-widest { letter-spacing: var(--tracking-widest); }
+.tracking-wide   { letter-spacing: var(--tracking-wide); }
+
+/* Glow effect */
+.glow-primary {
+  text-shadow: 0 0 40px var(--color-primary-glow-strong);
+}
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(
+    135deg,
+    var(--color-primary-pale) 0%,
+    var(--color-primary) 40%,
+    var(--color-gold) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Gradient text subtle */
+.gradient-text-subtle {
+  background: linear-gradient(
+    135deg,
+    var(--color-text-primary) 0%,
+    var(--color-primary-pale) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Divider */
+.divider {
+  width: 100%;
+  height: 1px;
+  background: var(--color-border);
+}
+
+.divider-orange {
+  width: 60px;
+  height: 2px;
+  background: var(--color-primary);
+}
+
+/* Visibility helper untuk animasi */
+.will-animate {
+  opacity: 0;
+  transform: translateY(40px);
+}
+
+/* ------------------------------------------------------------
+   5. SCROLLBAR
+   ------------------------------------------------------------ */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-primary);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary-hover);
+}
+
+/* ------------------------------------------------------------
+   6. SELECTION
+   ------------------------------------------------------------ */
+::selection {
+  background-color: var(--color-primary);
+  color: var(--color-text-inverse);
+}
+
+/* ------------------------------------------------------------
+   7. FOCUS
+   ------------------------------------------------------------ */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 4px;
+  border-radius: var(--radius-sm);
+}
