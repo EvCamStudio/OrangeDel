@@ -1,5 +1,4 @@
 import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 /**
  * Parallax vertikal dasar — elemen bergerak lebih lambat/cepat dari scroll

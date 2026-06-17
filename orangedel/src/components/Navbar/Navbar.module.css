@@ -4,24 +4,44 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 2px;
-  z-index: calc(var(--z-navbar) + 1);
-  background: transparent;
+  height: 8px;
+  z-index: calc(var(--z-navbar) + 2); /* Tetap di atas segalanya */
   pointer-events: none;
+  overflow: visible;
 }
 
 .progressBarFill {
+  position: absolute;
+  left: 0;
+  top: 0; /* Bener-bener di paling atas layar */
+  transform: translateX(-100%);
   width: 100%;
-  height: 100%;
+  height: 3px;
   background: linear-gradient(
     90deg,
     var(--color-primary) 0%,
+    var(--color-primary-light) 50%,
     var(--color-gold) 100%
   );
-  transform: scaleX(0);
-  transform-origin: left center;
-  box-shadow: 0 0 8px var(--color-primary-glow);
+  z-index: 2;
   will-change: transform;
+}
+
+/* Bullet bulat kecil bercahaya di ujung kanan garis fill */
+.progressBarFill::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translate(50%, -50%);
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--color-primary-light);
+  box-shadow: 
+    0 0 6px var(--color-primary), 
+    0 0 12px var(--color-primary-light);
+  z-index: 3;
 }
 
 /* ─── Navbar Container ─────────────────────────────────────── */
@@ -36,7 +56,12 @@
     background-color var(--duration-base) var(--ease-out),
     padding var(--duration-base) var(--ease-out),
     border-color var(--duration-base) var(--ease-out),
-    backdrop-filter var(--duration-base) var(--ease-out);
+    backdrop-filter var(--duration-base) var(--ease-out),
+    top 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    width 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    left 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    right 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   border-bottom: 1px solid transparent;
 }
 
@@ -49,7 +74,22 @@
   border-bottom-color: var(--color-border);
 }
 
-/* Inner layout */
+/* ─── Hero Mode — Navbar di kanan ─────────────────────────── */
+.nav.navHero {
+  /* Posisikan di kanan, auto width, tidak melebar penuh */
+  top: 0;
+  left: auto;
+  right: 0;
+  width: auto;
+  min-width: unset;
+  padding: 0;
+  border-bottom: none;
+  background-color: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* Inner layout normal (horizontal) */
 .inner {
   display: flex;
   align-items: center;
@@ -59,6 +99,121 @@
   margin-inline: auto;
   padding-inline: var(--section-px);
   gap: var(--space-8);
+  transition: flex-direction 0.5s ease, align-items 0.5s ease, padding 0.5s ease;
+}
+
+/* Hero mode inner — vertikal di kanan */
+.navHero .inner {
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-start;
+  width: auto;
+  max-width: none;
+  margin-inline: 0;
+  padding-top: var(--space-10);
+  padding-right: clamp(1.5rem, 3vw, 3rem);
+  padding-left: 0;
+  padding-bottom: clamp(6rem, 12vh, 9rem);
+  gap: 0;
+  height: 100vh;
+}
+
+/* Hero: sembunyikan logo — branding ada di hero content */
+.navHero .logo {
+  display: none;
+}
+
+/* Hero: links vertikal — dorong ke tengah dengan margin auto */
+.navHero .links {
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-5);
+  margin-top: auto;
+  margin-bottom: auto;
+  padding-bottom: var(--space-6);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Hero: link text right-aligned */
+.navHero .link {
+  align-items: flex-end;
+  font-size: var(--text-xs);
+}
+
+/* Hero: CTA di bawah sejajar dengan ctaRow hero content */
+.navHero .actions {
+  margin-top: auto;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-3);
+}
+
+/* Hero: hamburger hidden in hero mode on desktop */
+.navHero .hamburger {
+  display: none;
+}
+
+/* ─── Floating Navbar (setelah hero section) ────────────────── */
+.nav.navFloating {
+  /* Centered floating pill — tanpa CSS transform (GSAP butuh transform) */
+  top: 20px;
+  left: 0;
+  right: 0;
+  width: fit-content;
+  margin-inline: auto;
+  /* Dark glassmorphism — bukan transparan */
+  background: linear-gradient(
+    145deg,
+    rgba(20, 18, 12, 0.96) 0%,
+    rgba(10, 9, 5, 0.98) 100%
+  );
+  backdrop-filter: blur(28px) saturate(1.4);
+  -webkit-backdrop-filter: blur(28px) saturate(1.4);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-top: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: var(--radius-2xl);
+  padding: 0;
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.45),
+    0 1px 4px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(255, 107, 0, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* Floating inner — horizontal centered */
+.navFloating .inner {
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  max-width: none;
+  height: auto;
+  margin: 0;
+  padding: var(--space-3) var(--space-8);
+  gap: var(--space-8);
+}
+
+/* Floating links — horizontal row */
+.navFloating .links {
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-8);
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+/* Floating link — centered alignment */
+.navFloating .link {
+  align-items: center;
+}
+
+/* Floating actions — row, no auto margin */
+.navFloating .actions {
+  margin-top: 0;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-4);
 }
 
 /* ─── Logo ─────────────────────────────────────────────────── */

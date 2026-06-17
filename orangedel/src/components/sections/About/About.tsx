@@ -11,28 +11,43 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
+// Foto Unsplash per chapter (berganti saat chapter berganti)
+const CHAPTER_PHOTOS = [
+  // Ch01 — Asal Usul: petani memetik jeruk
+  "https://images.unsplash.com/photo-1556316824-0d496cd18555?w=900&q=80&fit=crop&auto=format",
+  // Ch02 — Lahan: kebun jeruk di perbukitan
+  "https://images.unsplash.com/photo-1767022093613-ee137618421b?w=900&q=80&fit=crop&auto=format",
+  // Ch03 — Kualitas: pohon penuh jeruk
+  "https://images.unsplash.com/photo-1536657464919-892534f60d6e?w=900&q=80&fit=crop&auto=format",
+  // Ch04 — Komunitas: tangan memetik jeruk
+  "https://images.unsplash.com/photo-1763249102462-bd72e8cedef1?w=900&q=80&fit=crop&auto=format",
+];
+
 const STEP_HEIGHT = 700; // px scroll per chapter
 
 export default function About() {
-  const sectionRef      = useRef<HTMLElement>(null);
+  const sectionRef    = useRef<HTMLElement>(null);
 
   // Intro refs
-  const introRef        = useRef<HTMLDivElement>(null);
-  const introLabelRef   = useRef<HTMLParagraphElement>(null);
-  const introHeadRef    = useRef<HTMLHeadingElement>(null);
-  const introDescRef    = useRef<HTMLParagraphElement>(null);
+  const introRef      = useRef<HTMLDivElement>(null);
+  const introLabelRef = useRef<HTMLParagraphElement>(null);
+  const introHeadRef  = useRef<HTMLHeadingElement>(null);
+  const introDescRef  = useRef<HTMLParagraphElement>(null);
 
   // Pinned story refs
-  const storyWrapRef    = useRef<HTMLDivElement>(null);
-  const storyPinRef     = useRef<HTMLDivElement>(null);
-  const stepRefs        = useRef<(HTMLDivElement | null)[]>([]);
-  const statNumRef      = useRef<HTMLSpanElement>(null);
-  const statLabelRef    = useRef<HTMLSpanElement>(null);
-  const progressBarRef  = useRef<HTMLDivElement>(null);
-  const chapterNumRef   = useRef<HTMLSpanElement>(null);
+  const storyWrapRef  = useRef<HTMLDivElement>(null);
+  const storyPinRef   = useRef<HTMLDivElement>(null);
+  const stepRefs      = useRef<(HTMLDivElement | null)[]>([]);
+  const photoRefs     = useRef<(HTMLDivElement | null)[]>([]);
 
-  // Stats refs
-  const statsRef        = useRef<HTMLDivElement>(null);
+  // Right panel refs
+  const statNumRef    = useRef<HTMLSpanElement>(null);
+  const statLabelRef  = useRef<HTMLSpanElement>(null);
+  const progressBarRef= useRef<HTMLDivElement>(null);
+  const chapterNumRef = useRef<HTMLSpanElement>(null);
+
+  // Stats row ref
+  const statsRef      = useRef<HTMLDivElement>(null);
 
   // ─── Intro text reveal ────────────────────────────────────────
   useEffect(() => {
@@ -41,7 +56,6 @@ export default function About() {
     const desc    = introDescRef.current;
     if (!label || !heading || !desc) return;
 
-    // Split heading per line
     const splitHead = new SplitType(heading, { types: "lines" });
     splitHead.lines?.forEach((line) => {
       const wrap = document.createElement("div");
@@ -85,6 +99,14 @@ export default function About() {
 
     if (!storyWrap || !storyPin) return;
 
+    // Inisialisasi foto — semua opacity 0 kecuali pertama
+    photoRefs.current.forEach((photo, i) => {
+      if (!photo) return;
+      if (i === 0) {
+        photo.classList.add(styles.active);
+      }
+    });
+
     // Pin the visual container
     const pinTrigger = ScrollTrigger.create({
       trigger: storyWrap,
@@ -113,10 +135,10 @@ export default function About() {
     const stepTriggers: ScrollTrigger[] = [];
 
     ABOUT_CHAPTERS.forEach((chapter, i) => {
-      const stepEl = stepRefs.current[i];
+      const stepEl  = stepRefs.current[i];
+      const photoEl = photoRefs.current[i];
       if (!stepEl) return;
 
-      // Set all steps hidden initially except first
       if (i !== 0) {
         gsap.set(stepEl, { opacity: 0, y: 40 });
       }
@@ -126,10 +148,8 @@ export default function About() {
         start: `top+=${i * STEP_HEIGHT} top`,
         end:   `top+=${(i + 1) * STEP_HEIGHT} top`,
 
-        onEnter: () => animateToStep(i, chapter, stepEl),
-        onEnterBack: () => {
-          if (i > 0) animateToStep(i, chapter, stepEl);
-        },
+        onEnter: () => animateToStep(i, chapter, stepEl, photoEl),
+        onEnterBack: () => animateToStep(i, chapter, stepEl, photoEl),
         onLeave: () => {
           if (i < ABOUT_CHAPTERS.length - 1) {
             gsap.to(stepEl, { opacity: 0, y: -30, duration: 0.4, ease: "power3.in" });
@@ -146,19 +166,22 @@ export default function About() {
     function animateToStep(
       i: number,
       chapter: (typeof ABOUT_CHAPTERS)[0],
-      stepEl: HTMLDivElement
+      stepEl: HTMLDivElement,
+      photoEl: HTMLDivElement | null
     ) {
       // Animate step content in
       gsap.to(stepEl, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" });
 
-      // Update stat number with flip
+      // Switch foto: hapus semua active, aktifkan yang sesuai
+      photoRefs.current.forEach((p) => p?.classList.remove(styles.active));
+      photoEl?.classList.add(styles.active);
+
+      // Update stat + chapter number
       if (statNum && statLabel && chapNum) {
         const tl = gsap.timeline();
         tl.to([statNum, statLabel], {
-          opacity: 0,
-          y: -20,
-          duration: 0.25,
-          ease: "power2.in",
+          opacity: 0, y: -16,
+          duration: 0.22, ease: "power2.in",
         })
         .call(() => {
           if (statNum)   statNum.textContent   = chapter.stat;
@@ -166,10 +189,8 @@ export default function About() {
           if (chapNum)   chapNum.textContent   = chapter.num;
         })
         .to([statNum, statLabel], {
-          opacity: 1,
-          y: 0,
-          duration: 0.4,
-          ease: "power3.out",
+          opacity: 1, y: 0,
+          duration: 0.38, ease: "power3.out",
         });
       }
     }
@@ -181,7 +202,7 @@ export default function About() {
     };
   }, []);
 
-  // ─── Stats section reveal ──────────────────────────────────────
+  // ─── Stats row reveal ──────────────────────────────────────────
   useEffect(() => {
     const statsEl = statsRef.current;
     if (!statsEl) return;
@@ -205,7 +226,7 @@ export default function About() {
   return (
     <section ref={sectionRef} id="about" className={styles.section}>
 
-      {/* ── Intro ─────────────────────────────────────────── */}
+      {/* ── Intro ───────────────────────────────────────────── */}
       <div ref={introRef} className={styles.intro}>
         <div className={styles.container}>
           <div className={styles.introGrid}>
@@ -233,7 +254,7 @@ export default function About() {
         </div>
       </div>
 
-      {/* ── Pinned Scroll Storytelling ────────────────────── */}
+      {/* ── Pinned Scroll Storytelling ───────────────────────── */}
       <div
         ref={storyWrapRef}
         className={styles.storyWrap}
@@ -284,8 +305,21 @@ export default function About() {
 
             </div>
 
-            {/* Right: Big stat visual */}
+            {/* Right: Photo frame dengan foto per chapter */}
             <div className={styles.storyRight}>
+              <div className={styles.chapterPhotoWrap}>
+                {CHAPTER_PHOTOS.map((url, i) => (
+                  <div
+                    key={i}
+                    ref={(el) => { photoRefs.current[i] = el; }}
+                    className={styles.chapterPhoto}
+                    style={{ backgroundImage: `url(${url})` }}
+                    aria-hidden="true"
+                  />
+                ))}
+              </div>
+
+              {/* Stat overlay di atas foto */}
               <div className={styles.statVisual}>
                 <span ref={statNumRef}   className={styles.statNumber}>
                   {ABOUT_CHAPTERS[0].stat}
@@ -294,10 +328,6 @@ export default function About() {
                   {ABOUT_CHAPTERS[0].statLabel}
                 </span>
               </div>
-
-              {/* Decorative ring */}
-              <div className={styles.ring} aria-hidden="true" />
-              <div className={styles.ring2} aria-hidden="true" />
             </div>
 
           </div>

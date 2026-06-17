@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import styles from "./HeroCanvas.module.css";
 
 interface HeroCanvasProps {
@@ -56,7 +57,12 @@ export default function HeroCanvas({ onReady }: HeroCanvasProps) {
     fillLight.position.set(0, -5, 2);
     scene.add(fillLight);
 
-    // ─── Main Orange Sphere ─────────────────────────────────────
+    // ─── Main Orange Container ──────────────────────────────────
+    const orangeGroup = new THREE.Group();
+    orangeGroup.position.set(2.2, 0.3, 0);
+    scene.add(orangeGroup);
+
+    // Fallback sphere (tampil instan sebelum model GLB selesai dimuat)
     const sphereGeo = new THREE.IcosahedronGeometry(1.8, 8);
     const sphereMat = new THREE.MeshStandardMaterial({
       color:             new THREE.Color("#E85A00"),
@@ -66,8 +72,7 @@ export default function HeroCanvas({ onReady }: HeroCanvasProps) {
       metalness:         0.05,
     });
     const sphere = new THREE.Mesh(sphereGeo, sphereMat);
-    sphere.position.set(2.2, 0.3, 0);
-    scene.add(sphere);
+    orangeGroup.add(sphere);
 
     // ─── Glow Layers (concentric transparent shells) ────────────
     const glowMats = [
@@ -86,7 +91,7 @@ export default function HeroCanvas({ onReady }: HeroCanvasProps) {
         depthWrite:  false,
       });
       const mesh = new THREE.Mesh(g, m);
-      mesh.position.copy(sphere.position);
+      mesh.position.copy(orangeGroup.position);
       scene.add(mesh);
       return mesh;
     });
@@ -140,7 +145,7 @@ export default function HeroCanvas({ onReady }: HeroCanvasProps) {
       opacity:     0.15,
     });
     const ring = new THREE.Mesh(ringGeo, ringMat);
-    ring.position.copy(sphere.position);
+    ring.position.copy(orangeGroup.position);
     ring.rotation.x = Math.PI / 3;
     scene.add(ring);
 
@@ -171,11 +176,60 @@ export default function HeroCanvas({ onReady }: HeroCanvasProps) {
     };
     window.addEventListener("resize", onResize);
 
+    // ─── Load GLB Model ─────────────────────────────────────────
+    const loader = new GLTFLoader();
+    loader.load(
+      "/MandarinOrange.gltf",
+      (gltf) => {
+        const model = gltf.scene;
+
+        // Auto-scale dan center model agar ukurannya pas dengan sphere fallback
+        const box = new THREE.Box3().setFromObject(model);
+        const size = box.getSize(new THREE.Vector3());
+        const maxDim = Math.max(size.x, size.y, size.z);
+        const targetScale = 3.6 / maxDim; // diameter disamakan dengan sphere (1.8 * 2)
+        model.scale.setScalar(targetScale);
+
+        const center = box.getCenter(new THREE.Vector3());
+        model.position.set(-center.x * targetScale, -center.y * targetScale, -center.z * targetScale);
+
+        model.traverse((child) => {
+          if ((child as THREE.Mesh).isMesh) {
+            const mesh = child as THREE.Mesh;
+            mesh.castShadow = true;
+            mesh.receiveShadow = true;
+          }
+        });
+
+        // Hapus sphere fallback dan tambahkan model jeruk asli
+        if (orangeGroup.children.includes(sphere)) {
+          orangeGroup.remove(sphere);
+          sphereGeo.dispose();
+          sphereMat.dispose();
+        }
+        
+        orangeGroup.add(model);
+        onReady?.();
+      },
+      undefined,
+      (error) => {
+        console.error("Error loading orange model:", error);
+        // Jika gagal, scene tetap berjalan menggunakan sphere fallback
+        onReady?.();
+      }
+    );
+
     // ─── Render Loop ────────────────────────────────────────────
     const clock = new THREE.Clock();
-    let animId: number;
+    let animId: number | null = null;
+    let isVisible = true;
 
     const tick = () => {
+      if (!isVisible) {
+        animId = null;
+        return;
+      }
+
       animId = requestAnimationFrame(tick);
       const elapsed = clock.getElapsedTime();
 
@@ -183,16 +237,16 @@ export default function HeroCanvas({ onReady }: HeroCanvasProps) {
       target.x += (mouse.x - target.x) * 0.04;
       target.y += (mouse.y - target.y) * 0.04;
 
-      // Sphere rotation + mouse parallax
-      sphere.rotation.y  = elapsed * 0.12 + target.x * 0.3;
-      sphere.rotation.x  = target.y * 0.2;
-      sphere.position.x  = 2.2 + target.x * 0.4;
-      sphere.position.y  = 0.3 - target.y * 0.3;
+      // Orange container rotation + mouse parallax
+      orangeGroup.rotation.y  = elapsed * 0.12 + target.x * 0.3;
+      orangeGroup.rotation.x  = target.y * 0.2;
+      orangeGroup.position.x  = 2.2 + target.x * 0.4;
+      orangeGroup.position.y  = 0.3 - target.y * 0.3;
 
-      // Glow follows sphere
-      glowMeshes.forEach((m) => m.position.copy(sphere.position));
-      ring.position.copy(sphere.position);
-      ring2.position.copy(sphere.position);
+      // Glow follows orange
+      glowMeshes.forEach((m) => m.position.copy(orangeGroup.position));
+      ring.position.copy(orangeGroup.position);
+      ring2.position.copy(orangeGroup.position);
 
       // Rings rotate independently
       ring.rotation.z  = elapsed * 0.08;
@@ -202,24 +256,45 @@ export default function HeroCanvas({ onReady }: HeroCanvasProps) {
       particles.rotation.y = elapsed * 0.018;
       particles.rotation.x = elapsed * 0.008;
 
-      // Subtle breathing scale on sphere
+      // Subtle breathing scale on orange
       const breathe = 1 + Math.sin(elapsed * 0.8) * 0.008;
-      sphere.scale.setScalar(breathe);
+      orangeGroup.scale.setScalar(breathe);
 
       renderer.render(scene, camera);
     };
 
-    tick();
-    onReady?.();
+    // Mulai loop pertama kali
+    animId = requestAnimationFrame(tick);
+
+    // Setup IntersectionObserver untuk menjeda loop saat canvas di luar viewport
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const wasVisible = isVisible;
+        isVisible = entry.isIntersecting;
+
+        // Jika menjadi terlihat dan loop sedang mati, hidupkan kembali
+        if (isVisible && !wasVisible && animId === null) {
+          animId = requestAnimationFrame(tick);
+        }
+      },
+      { threshold: 0 }
+    );
+    observer.observe(canvas);
 
     // ─── Cleanup ────────────────────────────────────────────────
     return () => {
-      cancelAnimationFrame(animId);
+      if (animId !== null) {
+        cancelAnimationFrame(animId);
+      }
+      observer.disconnect();
       window.removeEventListener("mousemove", onMouseMove);
       window.removeEventListener("resize",    onResize);
 
-      sphereGeo.dispose();
-      sphereMat.dispose();
+      // Cleanup fallback sphere if it wasn't replaced
+      if (orangeGroup.children.includes(sphere)) {
+        sphereGeo.dispose();
+        sphereMat.dispose();
+      }
       glowMeshes.forEach((m) => {
         m.geometry.dispose();
         (m.material as THREE.Material).dispose();

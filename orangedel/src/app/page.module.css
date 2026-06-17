@@ -7,5 +7,4 @@
 .mainContent {
   width: 100%;
   min-height: 100vh;
-  transition: opacity 0.3s ease;
 }

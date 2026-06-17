@@ -11,10 +11,10 @@ if (typeof window !== "undefined") {
  * Konfigurasi default ScrollTrigger untuk Lenis
  * Panggil ini sekali di root component setelah Lenis diinisialisasi
  */
-export function syncLenisWithGSAP(lenis: { on: Function }) {
+export function syncLenisWithGSAP(lenis: { on: (event: string, cb: (...args: unknown[]) => void) => void }) {
   lenis.on("scroll", ScrollTrigger.update);
 
-  gsap.ticker.add((time: number) => {
+  gsap.ticker.add(() => {
     // Lenis akan diupdate via RAF di hook useLenis
     // Ini hanya memastikan ScrollTrigger sinkron
   });

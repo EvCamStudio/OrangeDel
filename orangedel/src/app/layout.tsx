@@ -36,8 +36,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="id" className={`${cormorant.variable} ${dmSans.variable}`}>
-      <body>
+    <html lang="id" className={`${cormorant.variable} ${dmSans.variable}`} style={{ colorScheme: "dark" }} suppressHydrationWarning>
+      <head>
+        <meta name="color-scheme" content="dark" />
+        <meta name="theme-color" content="#080804" />
+        <style dangerouslySetInnerHTML={{ __html: `
+          html, body {
+            background-color: #080804 !important;
+          }
+        `}} />
+      </head>
+      <body suppressHydrationWarning>
         <LoadingProvider>
           {children}
         </LoadingProvider>

@@ -7,6 +7,7 @@
    1. CSS CUSTOM PROPERTIES (TOKENS)
    ------------------------------------------------------------ */
 :root {
+  color-scheme: dark; /* Memaksa browser menggunakan dark mode default (mencegah flash putih) */
   /* --- Colors --- */
 
   /* Background */
@@ -44,6 +45,10 @@
   --color-black:    #000000;
   --color-overlay:  rgba(8, 8, 4, 0.75);   /* Overlay gelap */
   --color-overlay-strong: rgba(8, 8, 4, 0.92);
+
+  /* Scrollbar dynamic fade-in variables */
+  --scrollbar-track: transparent;
+  --scrollbar-thumb: transparent;
 
   /* --- Typography --- */
   --font-display: var(--font-cormorant), "Georgia", serif;
@@ -161,6 +166,8 @@ html {
   scroll-behavior: auto; /* Dihandle oleh Lenis */
   -webkit-text-size-adjust: 100%;
   height: 100%;
+  scrollbar-gutter: stable; /* Mencegah layout shift saat overflow: hidden dihapus */
+  background-color: var(--color-bg); /* Mencegah flash putih sebelum body dirender */
 }
 
 body {
@@ -337,11 +344,11 @@ ul, ol {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--color-bg);
+  background: var(--scrollbar-track, transparent);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-primary);
+  background: var(--scrollbar-thumb, transparent);
   border-radius: var(--radius-full);
 }
 
