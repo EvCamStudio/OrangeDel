@@ -1,24 +1,28 @@
 .section {
   position: relative;
   width: 100%;
-  padding-block: var(--section-py);
+  height: 100vh;
   background-color: var(--color-bg);
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-block: var(--space-12);
 }
 
 .container {
-  max-width: var(--container-max);
-  margin-inline: auto;
-  padding-inline: clamp(1.5rem, 6vw, 8rem);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
 }
 
 /* ─── Header ─────────────────────────────────────────────────── */
 .header {
-  margin-bottom: clamp(3rem, 6vw, 5rem);
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--space-3);
+  padding-inline: clamp(1.5rem, 6vw, 8rem);
+  margin-bottom: var(--space-4);
+  z-index: 10;
 }
 
 .label {
@@ -64,22 +68,27 @@
   background-clip: text;
 }
 
-/* ─── Grid ───────────────────────────────────────────────────── */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--space-6);
+/* ─── Track Horizontal ───────────────────────────────────────── */
+.track {
+  display: flex;
+  gap: var(--space-8);
+  padding-inline: clamp(1.5rem, 6vw, 8rem);
+  will-change: transform;
+  align-items: center;
+  flex-grow: 1;
 }
 
 /* ─── Card ───────────────────────────────────────────────────── */
 .card {
+  width: 380px;
+  height: 400px;
   background-color: var(--color-surface);
   border: 1px solid rgba(255, 107, 0, 0.04);
   border-radius: var(--radius-2xl);
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  height: 100%;
+  flex-shrink: 0;
   transition:
     transform var(--duration-normal) var(--ease-out),
     border-color var(--duration-normal) var(--ease-out),
@@ -87,15 +96,15 @@
 }
 
 .card:hover {
-  transform: translateY(-6px);
+  transform: translateY(-8px);
   border-color: rgba(255, 107, 0, 0.2);
-  box-shadow: 0 12px 30px rgba(255, 107, 0, 0.06);
+  box-shadow: 0 12px 30px rgba(255, 107, 0, 0.05);
 }
 
 .imageWrap {
   position: relative;
   width: 100%;
-  height: 220px;
+  height: 200px;
   overflow: hidden;
 }
 
@@ -104,8 +113,8 @@
   height: 100%;
   background-size: cover;
   background-position: center;
+  filter: brightness(0.4) saturate(0.9);
   transition: transform var(--duration-slow) var(--ease-out);
-  filter: brightness(0.8) contrast(1.05);
 }
 
 .card:hover .image {
@@ -117,21 +126,33 @@
   inset: 0;
   background: linear-gradient(
     to bottom,
-    rgba(8, 8, 4, 0) 60%,
+    rgba(8, 8, 4, 0) 50%,
     var(--color-surface) 100%
   );
   z-index: 1;
+}
+
+.cardNum {
+  position: absolute;
+  top: var(--space-4);
+  right: var(--space-6);
+  font-family: var(--font-display);
+  font-size: var(--text-4xl);
+  font-weight: var(--weight-light);
+  color: var(--color-primary);
+  opacity: 0.85;
+  z-index: 2;
 }
 
 .cardBody {
   padding: var(--space-6);
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
   gap: var(--space-2);
+  flex-grow: 1;
 }
 
-.cardGrade {
+.cardLabel {
   font-family: var(--font-body);
   font-size: 10px;
   font-weight: var(--weight-medium);
@@ -153,25 +174,41 @@
   font-size: var(--text-xs);
   line-height: var(--leading-relaxed);
   color: var(--color-text-secondary);
-  margin-top: var(--space-1);
 }
 
 /* Responsive */
-@media (max-width: 1200px) {
-  .grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
 @media (max-width: 768px) {
   .heading {
     font-size: var(--text-3xl);
   }
+  
+  .card {
+    width: 320px;
+    height: 360px;
+  }
+  
+  .imageWrap {
+    height: 160px;
+  }
 }
 
 @media (max-width: 600px) {
-  .grid {
-    grid-template-columns: 1fr;
+  .section {
+    height: auto;
+    padding-block: var(--space-8);
+  }
+  
+  .track {
+    flex-direction: column;
+    padding-inline: var(--space-6);
+    gap: var(--space-6);
+    transform: none !important; /* Nonaktifkan horizontal scroll di mobile */
+    align-items: stretch;
+  }
+  
+  .card {
+    width: 100%;
+    height: auto;
   }
   
   .imageWrap {

@@ -5,6 +5,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import SplitType from "split-type";
 import { useLoading } from "@/context/LoadingContext";
+import { getLenis } from "@/lib/lenis";
 import styles from "./Hero.module.css";
 
 if (typeof window !== "undefined") {
@@ -249,7 +250,7 @@ export default function Hero() {
           ref={bgImgRef}
           className={styles.bgImage}
           style={{
-            backgroundImage: `url(https://images.unsplash.com/photo-1536657464919-892534f60d6e?w=1920&q=80&fit=crop&auto=format)`,
+            backgroundImage: `url(/images/gallery_suasana_pagi.png)`,
             opacity: 0,
           }}
           aria-hidden="true"
@@ -308,7 +309,22 @@ export default function Hero() {
             <a href="#hasil-kebun" className={styles.ctaPrimary}
               onClick={(e) => {
                 e.preventDefault();
-                document.querySelector("#hasil-kebun")?.scrollIntoView({ behavior: "smooth" });
+                const lenis = getLenis();
+                const target = document.querySelector("#hasil-kebun");
+                if (!target) return;
+                const computedStyle = window.getComputedStyle(target);
+                const paddingTop = parseFloat(computedStyle.paddingTop) || 0;
+                const scrollOffset = paddingTop - 80;
+                if (lenis) {
+                  lenis.scrollTo(target as HTMLElement, {
+                    offset: scrollOffset,
+                    duration: 1.6,
+                    easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+                  });
+                } else {
+                  const top = target.getBoundingClientRect().top + window.scrollY + scrollOffset;
+                  window.scrollTo({ top, behavior: "smooth" });
+                }
               }}
             >
               Lihat Hasil Kebun
@@ -316,7 +332,22 @@ export default function Hero() {
             <a href="#about" className={styles.ctaSecondary}
               onClick={(e) => {
                 e.preventDefault();
-                document.querySelector("#about")?.scrollIntoView({ behavior: "smooth" });
+                const lenis = getLenis();
+                const target = document.querySelector("#about");
+                if (!target) return;
+                const computedStyle = window.getComputedStyle(target);
+                const paddingTop = parseFloat(computedStyle.paddingTop) || 0;
+                const scrollOffset = paddingTop - 80;
+                if (lenis) {
+                  lenis.scrollTo(target as HTMLElement, {
+                    offset: scrollOffset,
+                    duration: 1.6,
+                    easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+                  });
+                } else {
+                  const top = target.getBoundingClientRect().top + window.scrollY + scrollOffset;
+                  window.scrollTo({ top, behavior: "smooth" });
+                }
               }}
             >
               Tentang Kami

@@ -14,13 +14,13 @@ if (typeof window !== "undefined") {
 // Foto Unsplash per chapter (berganti saat chapter berganti)
 const CHAPTER_PHOTOS = [
   // Ch01 — Asal Usul: petani memetik jeruk
-  "https://images.unsplash.com/photo-1556316824-0d496cd18555?w=900&q=80&fit=crop&auto=format",
+  "/images/gallery_panen.png",
   // Ch02 — Lahan: kebun jeruk di perbukitan
-  "https://images.unsplash.com/photo-1767022093613-ee137618421b?w=900&q=80&fit=crop&auto=format",
+  "/images/keunggulan_karo.png",
   // Ch03 — Kualitas: pohon penuh jeruk
-  "https://images.unsplash.com/photo-1536657464919-892534f60d6e?w=900&q=80&fit=crop&auto=format",
+  "/images/gallery_dedikasi.png",
   // Ch04 — Komunitas: tangan memetik jeruk
-  "https://images.unsplash.com/photo-1763249102462-bd72e8cedef1?w=900&q=80&fit=crop&auto=format",
+  "/images/proses_panen.png",
 ];
 
 const STEP_HEIGHT = 700; // px scroll per chapter
@@ -139,10 +139,6 @@ export default function About() {
       const photoEl = photoRefs.current[i];
       if (!stepEl) return;
 
-      if (i !== 0) {
-        gsap.set(stepEl, { opacity: 0, y: 40 });
-      }
-
       const trigger = ScrollTrigger.create({
         trigger: storyWrap,
         start: `top+=${i * STEP_HEIGHT} top`,
@@ -150,14 +146,6 @@ export default function About() {
 
         onEnter: () => animateToStep(i, chapter, stepEl, photoEl),
         onEnterBack: () => animateToStep(i, chapter, stepEl, photoEl),
-        onLeave: () => {
-          if (i < ABOUT_CHAPTERS.length - 1) {
-            gsap.to(stepEl, { opacity: 0, y: -30, duration: 0.4, ease: "power3.in" });
-          }
-        },
-        onLeaveBack: () => {
-          gsap.to(stepEl, { opacity: 0, y: 40, duration: 0.4, ease: "power3.in" });
-        },
       });
 
       stepTriggers.push(trigger);
@@ -169,8 +157,16 @@ export default function About() {
       stepEl: HTMLDivElement,
       photoEl: HTMLDivElement | null
     ) {
-      // Animate step content in
-      gsap.to(stepEl, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" });
+      // Switch active class on steps
+      stepRefs.current.forEach((step, idx) => {
+        if (step) {
+          if (idx === i) {
+            step.classList.add(styles.active);
+          } else {
+            step.classList.remove(styles.active);
+          }
+        }
+      });
 
       // Switch foto: hapus semua active, aktifkan yang sesuai
       photoRefs.current.forEach((p) => p?.classList.remove(styles.active));
@@ -282,7 +278,7 @@ export default function About() {
                   <div
                     key={i}
                     ref={(el) => { stepRefs.current[i] = el; }}
-                    className={styles.step}
+                    className={`${styles.step} ${i === 0 ? styles.active : ""}`}
                   >
                     <p className={styles.stepLabel}>{chapter.label}</p>
                     <h3 className={styles.stepHeading}>

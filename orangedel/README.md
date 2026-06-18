@@ -1,36 +1,146 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🍊 OrangeDel — Company Profile Digital Kebun Jeruk
 
-## Getting Started
+> Website company profile premium untuk UMKM perkebunan jeruk **Orange Del**.  
+> Dibangun dengan Next.js, GSAP, Three.js, dan Lenis untuk pengalaman scroll yang cinematic.
 
-First, run the development server:
+---
+
+## 🌐 Tentang Proyek
+
+**OrangeDel** adalah platform digital untuk membangun brand awareness dan memperluas jangkauan pasar UMKM perkebunan jeruk secara online. Bukan toko online — murni website promosi dan brand building dengan visual *dark luxury citrus*.
+
+**Positioning:**  
+> *"Orange Del adalah kebun jeruk yang cukup serius untuk punya brand sendiri."*
+
+---
+
+## ✨ Fitur Utama
+
+- 🎥 **Hero Section** — WebGL sphere interaktif, animasi GSAP entrance & parallax scroll
+- 📖 **Tentang** — Story dan misi kebun Orange Del
+- 🏆 **Keunggulan** — 4 keunggulan utama dengan visual dramatis
+- 🍊 **Hasil Kebun** — Varietas & grade jeruk dengan animasi scroll
+- 🌿 **Dari Kebun ke Tanganmu** — Storytelling proses farm-to-table (pinned scroll)
+- 📸 **Galeri** — Foto suasana kebun & panen
+- 💬 **Testimoni** — Social proof dari pelanggan
+- 📍 **Lokasi & Kontak** — Maps embed + CTA WhatsApp
+- 🖱️ **Custom Cursor** — Animasi kursor premium
+- 💬 **Floating WhatsApp Button** — CTA kontak selalu terlihat
+
+---
+
+## 🛠️ Tech Stack
+
+| Teknologi | Kegunaan |
+|-----------|----------|
+| **Next.js 15** (App Router + TypeScript) | Framework utama |
+| **GSAP** + `@gsap/react` | Animasi (ScrollTrigger, Reveal, Parallax) |
+| **Three.js** + `@types/three` | WebGL / 3D visual (Hero sphere) |
+| **Lenis** | Smooth scroll |
+| **split-type** | Text splitting untuk Text Reveal Animation |
+
+---
+
+## 🎨 Design System
+
+**Tema: "Dark Luxury Citrus"**
+
+| Token | Warna | Peran |
+|-------|-------|-------|
+| `--color-bg` | `#080804` | Background utama |
+| `--color-primary` | `#FF6B00` | Oranye brand utama |
+| `--color-gold` | `#D4A017` | Aksen emas |
+| `--color-text-primary` | `#F5F0E8` | Putih hangat |
+
+**Font:** Cormorant (Display) + DM Sans (Body)
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js 18+
+- npm
+
+### Install & Run
 
 ```bash
+# Clone repository
+git clone <repo-url>
+cd orangedel
+
+# Install dependencies
+npm install
+
+# Jalankan development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Buka [http://localhost:3000](http://localhost:3000) di browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Build Production
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm run start
+```
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 📁 Struktur Project
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+src/
+├── app/
+│   ├── page.tsx          # Halaman utama (single page)
+│   └── globals.css       # Design system & CSS tokens
+├── components/
+│   ├── Navbar/           # Navbar dengan smooth scroll
+│   ├── CustomCursor/     # Kursor animasi kustom
+│   ├── FloatingWA/       # Floating WhatsApp CTA
+│   └── sections/
+│       ├── Hero/         # WebGL sphere + entrance animation
+│       ├── About/        # Story kebun
+│       ├── Keunggulan/   # 4 keunggulan utama
+│       ├── HasilKebun/   # Varietas produk
+│       ├── Proses/       # Farm-to-table journey
+│       ├── Gallery/      # Galeri foto
+│       ├── Testimoni/    # Testimonial
+│       ├── Location/     # Lokasi & kontak
+│       └── Footer/       # Footer
+└── data/
+    └── nav.ts            # Konfigurasi navigasi
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 📋 Status Pengerjaan
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### ✅ Selesai
+- [x] Next.js project setup (App Router + TypeScript)
+- [x] GSAP, Three.js, Lenis, split-type installed
+- [x] Design system (colors, typography, spacing tokens)
+- [x] **Hero section** — WebGL sphere, animasi entrance & parallax
+- [x] **Navbar** — smooth scroll, anchor links
+- [x] **Tentang (About)** — story & misi kebun
+- [x] **Keunggulan** — 4 poin keunggulan visual dramatis
+- [x] **Hasil Kebun** — varietas & grade jeruk
+- [x] **Proses** — farm-to-table journey (pinned scroll)
+- [x] **Galeri** — foto kebun & panen
+- [x] **Testimoni** — social proof pelanggan
+- [x] **Lokasi & Kontak** — Maps + CTA WhatsApp
+- [x] **Footer** — informasi & navigasi akhir
+- [x] **Custom Cursor** — animasi kursor premium
+- [x] **Floating WhatsApp Button** — CTA kontak persisten
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## 🏆 Konteks Lomba
+
+Proyek ini dibuat untuk **Lomba Web Design** dengan sub tema **UMKM dan Kewirausahaan**.
+
+> *"Website kami adalah company profile untuk UMKM perkebunan jeruk bernama Orange Del. Tujuannya untuk membangun brand awareness dan memperluas jangkauan pasar secara digital."*
+
+---
+
+*Dibuat dengan ❤️ untuk Orange Del Citrus Farm*

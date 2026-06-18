@@ -246,10 +246,14 @@ export default function Navbar() {
     const target = document.querySelector(href);
     if (!target) return;
 
+    // Hitung offset dinamis berdasarkan padding-top elemen target agar teks konten tepat berada di bawah navbar
+    const computedStyle = window.getComputedStyle(target);
+    const paddingTop = parseFloat(computedStyle.paddingTop) || 0;
+    const scrollOffset = paddingTop - NAVBAR_HEIGHT;
+
     if (lenis) {
-      // Lenis programmatic scroll dengan offset navbar
       lenis.scrollTo(target as HTMLElement, {
-        offset: -NAVBAR_HEIGHT,
+        offset: scrollOffset,
         duration: 1.6,
         easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       });
@@ -257,8 +261,8 @@ export default function Navbar() {
       // Fallback native
       const top =
         (target as HTMLElement).getBoundingClientRect().top +
-        window.scrollY -
-        NAVBAR_HEIGHT;
+        window.scrollY +
+        scrollOffset;
       window.scrollTo({ top, behavior: "smooth" });
     }
   }, []);
@@ -308,9 +312,9 @@ export default function Navbar() {
           <div className={styles.actions}>
             <a
               ref={ctaRef}
-              href="#kontak"
+              href="#lokasi"
               className={styles.cta}
-              onClick={(e) => handleNavClick(e, "#kontak")}
+              onClick={(e) => handleNavClick(e, "#lokasi")}
             >
               Hubungi Kami
             </a>

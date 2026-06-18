@@ -5,15 +5,18 @@ import { useLoading } from "@/context/LoadingContext";
 import { useLenis } from "@/hooks/useLenis";
 
 import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
+import CustomCursor from "@/components/CustomCursor/CustomCursor";
+import FloatingWA from "@/components/FloatingWA/FloatingWA";
 import Navbar from "@/components/Navbar/Navbar";
 import Hero from "@/components/sections/Hero/Hero";
 import HeroTransition from "@/components/sections/HeroTransition/HeroTransition";
 import About from "@/components/sections/About/About";
+import Keunggulan from "@/components/sections/Keunggulan/Keunggulan";
 import HasilKebun from "@/components/sections/HasilKebun/HasilKebun";
+import Proses from "@/components/sections/Proses/Proses";
 import Gallery from "@/components/sections/Gallery/Gallery";
-import Testimonial from "@/components/sections/Testimonial/Testimonial";
+import Testimoni from "@/components/sections/Testimoni/Testimoni";
 import Location from "@/components/sections/Location/Location";
-import Contact from "@/components/sections/Contact/Contact";
 import Footer from "@/components/sections/Footer/Footer";
 
 import styles from "./page.module.css";
@@ -37,6 +40,12 @@ export default function Home() {
       {/* Loading Screen — selalu render, animasi exit sendiri */}
       <LoadingScreen />
 
+      {/* Custom interactive cursor for desktop */}
+      <CustomCursor />
+
+      {/* Floating WhatsApp CTA */}
+      <FloatingWA />
+
       {/* Main content — muncul di balik loading screen */}
       <div className={styles.mainContent}>
         <Navbar />
@@ -44,11 +53,12 @@ export default function Home() {
           <Hero />
           <HeroTransition />
           <About />
+          <Keunggulan />
           <HasilKebun />
+          <Proses />
           <Gallery />
-          <Testimonial />
+          <Testimoni />
           <Location />
-          <Contact />
         </main>
         <Footer />
       </div>
