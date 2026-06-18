@@ -27,7 +27,7 @@ export default function FloatingWA() {
 
   return (
     <a
-      href="https://wa.me/6281234567890"
+      href="https://wa.me/6281263608108"
       target="_blank"
       rel="noopener noreferrer"
       className={`${styles.floatingWA} ${isVisible ? styles.visible : ""}`}

@@ -114,15 +114,15 @@ export default function Location() {
               <div className={styles.infoItem}>
                 <h4 className={styles.infoTitle}>Kontak Cepat</h4>
                 <p className={styles.infoText}>
-                  WhatsApp: +62 812-3456-7890<br />
-                  Email: info@orangedel.com
+                  WhatsApp: +62 812-6360-8108<br />
+                  Email: evcamstudio@gmail.com
                 </p>
               </div>
             </div>
 
             <div className={styles.ctaWrap}>
               <a
-                href="https://wa.me/6281234567890"
+                href="https://wa.me/6281263608108"
                 target="_blank"
                 rel="noopener noreferrer"
                 className={styles.waButton}
